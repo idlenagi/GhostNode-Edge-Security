@@ -3,7 +3,7 @@
 
 **Ghost Node** is a distributed IoT security pipeline that migrates Wi-Fi threat detection from the cloud to the hardware edge. By deploying an **Edge Impulse AI** model on an ESP32, the system identifies, classifies, and alerts on network vulnerabilities in real-time while maintaining 100% data integrity through managed cloud ingestion.
 
-**Status**: 🚧 System Architecture & Design Phase 
+**Status**: 🚧 System Architecture & Design Phase. 
 This repository currently hosts the technical specification and system architecture for Ghost Node. The core firmware and cloud logic are currently in private development and will be pushed following final inference optimization.
 ---
 
