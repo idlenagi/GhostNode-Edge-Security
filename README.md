@@ -1,15 +1,23 @@
 
-#  Ghost Node: AI-Powered Edge Wi-Fi Threat Intelligence
+# Ghost Node: AI-Powered Edge Wi-Fi Threat Intelligence
 
 **Ghost Node** is a distributed IoT security pipeline that migrates Wi-Fi threat detection from the cloud to the hardware edge. By deploying an **Edge Impulse AI** model on an ESP32, the system identifies, classifies, and alerts on network vulnerabilities in real-time while maintaining 100% data integrity through managed cloud ingestion.
 
 ---
 
-##  System Architecture
+## The Problem: The "Cloud Latency" Gap in IoT Security
+
+Traditional IoT security frameworks rely on sending raw sensor data to the cloud for analysis. This creates three critical vulnerabilities:
+
+* **The Reaction Gap:** Cloud-based detection introduces latency. In a fast-moving Wi-Fi "Man-in-the-Middle" attack, by the time the cloud processes the threat, the data may already be compromised.
+* **Bandwidth Exhaustion:** Sending constant, high-velocity Wi-Fi telemetry to the cloud is expensive and scales poorly.
+* **Transit Risks:** Transmitting raw network data creates a privacy risk; if the transit line is intercepted, the very data meant to secure the system becomes a liability.
+
+---
+
+## System Architecture
 
 Ghost Node utilizes a hybrid-cloud architecture to bridge local hardware sensing with global alerting and analytics.
-
-
 
 ```mermaid
 graph LR
@@ -20,7 +28,6 @@ graph LR
     E -- "Filtered Verdict" --> F[Power Automate Email]
     D -- "Streaming" --> G[Azure Data Explorer]
     G -- "KQL Dashboards" --> H[SOC Dashboard]
-
 ```
 
 ---
@@ -88,8 +95,6 @@ Sentinel
 
 
 
-**Theresia**
-*3rd Year Undergraduate Student | Specializing in IoT & Edge Security*
-
+Developed by Theresia
 ```
 ```
