@@ -1,11 +1,13 @@
 
-# 👻 Ghost Node: AI-Powered Edge Wi-Fi Threat Intelligence
+#  Ghost Node: AI-Powered Edge Wi-Fi Threat Intelligence
 
 **Ghost Node** is a distributed IoT security pipeline that migrates Wi-Fi threat detection from the cloud to the hardware edge. By deploying an **Edge Impulse AI** model on an ESP32, the system identifies, classifies, and alerts on network vulnerabilities in real-time while maintaining 100% data integrity through managed cloud ingestion.
 
+**Status**: 🚧 System Architecture & Design Phase 
+This repository currently hosts the technical specification and system architecture for Ghost Node. The core firmware and cloud logic are currently in private development and will be pushed following final inference optimization.
 ---
 
-## 🏗️ System Architecture
+##  System Architecture
 
 Ghost Node utilizes a hybrid-cloud architecture to bridge local hardware sensing with global alerting and analytics.
 
@@ -25,7 +27,7 @@ graph LR
 
 ---
 
-## 🛠️ Technical Stack
+##  Technical Stack
 
 | Layer | Technology |
 | --- | --- |
@@ -38,7 +40,7 @@ graph LR
 
 ---
 
-## 🌟 Key Features
+##  Key Features
 
 * **On-Device Neural Network:** Categorizes surrounding Wi-Fi networks as `SAFE`, `VULNERABLE`, or `UNSAFE` using on-chip inference.
 * **Intelligent Ingestion:** Utilizes managed cloud concurrency to handle high-velocity telemetry bursts without system failure.
@@ -47,7 +49,7 @@ graph LR
 
 ---
 
-## 🧪 Engineering Challenges & Solutions
+##  Engineering Challenges & Solutions
 
 ### 1. Ingestion Throughput & Rate Limiting (429 Errors)
 
@@ -61,7 +63,7 @@ graph LR
 
 ---
 
-## 📈 Analytics Deep Dive (KQL)
+##  Analytics Deep Dive (KQL)
 
 The following query powers the Threat Activity timeline, visualizing network volatility in 5-minute intervals:
 
@@ -77,7 +79,7 @@ Sentinel
 
 ---
 
-## 🚀 How to Deploy
+##  How to Deploy
 
 1. **Hardware:** Flash the ESP32 with the provided C++ firmware (requires Edge Impulse library).
 2. **Broker:** Set up an EMQX instance and configure the Azure Function to subscribe to the `threat/detection` topic.
@@ -86,7 +88,7 @@ Sentinel
 
 ---
 
-## 👩‍💻 Author
+
 
 **Theresia**
 *3rd Year Undergraduate Student | Specializing in IoT & Edge Security*
