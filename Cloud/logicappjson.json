@@ -1,0 +1,111 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "contentVersion": "1.0.0.0",
+        "triggers": {
+            "When_a_blob_is_added_or_modified": {
+                "recurrence": {
+                    "interval": 1,
+                    "frequency": "Minute",
+                    "timeZone": "Taipei Standard Time"
+                },
+                "type": "ApiConnection",
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['azureblob']['connectionId']"
+                        }
+                    },
+                    "method": "get",
+                    "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('AccountNameFromSettings'))}/triggers/batch/onupdatedfile",
+                    "queries": {
+                        "folderId": "/sentineldata/device-logs",
+                        "maxFileCount": 10
+                    }
+                },
+                "runtimeConfiguration": {
+                    "concurrency": {
+                        "runs": 20
+                    }
+                }
+            }
+        },
+        "actions": {
+            "Create_SAS_URI_by_path": {
+                "type": "ApiConnection",
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['azureblob']['connectionId']"
+                        }
+                    },
+                    "method": "post",
+                    "body": {
+                        "Permissions": "Read"
+                    },
+                    "path": "/v2/datasets/@{encodeURIComponent('AccountNameFromSettings')}/CreateSharedLinkByPath",
+                    "queries": {
+                        "path": "@triggerBody()?['Path']"
+                    }
+                }
+            },
+            "Ingest_to_Kusto": {
+                "runAfter": {
+                    "Create_SAS_URI_by_path": ["Succeeded"]
+                },
+                "type": "ApiConnection",
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['kusto']['connectionId']"
+                        }
+                    },
+                    "method": "post",
+                    "body": {
+                        "cluster": "https://<YOUR_CLUSTER_NAME>.<REGION>.kusto.windows.net",
+                        "db": "SentinelLog",
+                        "csl": ".ingest into table Sentinel (h'@{body('Create_SAS_URI_by_path')?['WebUrl']}') with (format='multijson', ingestionMappingReference='Sentinel_Mapping')"
+                    },
+                    "path": "/RunKustoAndVisualizeResults/true"
+                }
+            },
+            "Condition_Threat_Detected": {
+                "actions": {
+                    "Notify_via_PowerAutomate": {
+                        "type": "Http",
+                        "inputs": {
+                            "uri": "https://<YOUR_POWER_AUTOMATE_ENDPOINT_HIDDEN>",
+                            "method": "POST",
+                            "body": {
+                                "ssid": "@{body('Parse_JSON')?['payload']?['ssid']}",
+                                "verdict": "@{body('Parse_JSON')?['payload']?['verdict']}",
+                                "confidence": "@body('Parse_JSON')?['payload']?['confidence']"
+                            }
+                        }
+                    }
+                },
+                "expression": {
+                    "or": [
+                        { "equals": ["@body('Parse_JSON')?['payload']?['verdict']", "VULNERABLE"] },
+                        { "equals": ["@body('Parse_JSON')?['payload']?['verdict']", "UNSAFE"] }
+                    ]
+                },
+                "type": "If"
+            }
+        }
+    },
+    "parameters": {
+        "$connections": {
+            "value": {
+                "azureblob": {
+                    "id": "/subscriptions/<YOUR_SUBSCRIPTION_ID>/providers/Microsoft.Web/locations/<REGION>/managedApis/azureblob",
+                    "connectionId": "/subscriptions/<YOUR_SUBSCRIPTION_ID>/resourceGroups/<YOUR_RG>/providers/Microsoft.Web/connections/azureblob"
+                },
+                "kusto": {
+                    "id": "/subscriptions/<YOUR_SUBSCRIPTION_ID>/providers/Microsoft.Web/locations/<REGION>/managedApis/kusto",
+                    "connectionId": "/subscriptions/<YOUR_SUBSCRIPTION_ID>/resourceGroups/<YOUR_RG>/providers/Microsoft.Web/connections/kusto"
+                }
+            }
+        }
+    }
+}

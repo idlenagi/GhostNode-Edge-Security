@@ -1,0 +1,9 @@
+# Core Azure Functions
+azure-functions
+
+# Storage & Identity
+azure-storage-blob>=12.19.0
+azure-identity
+
+# Recommended for JSON/Date handling in your code
+python-dateutil
