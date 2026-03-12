@@ -11,6 +11,7 @@ This guide provides the necessary steps to replicate the Ghost Node environment,
 ### Software & Accounts
 * **Arduino IDE** or **VS Code (PlatformIO)**
 * **Edge Impulse CLI** (for model deployment)
+*  **Python 3.9+** 
 * **EMQX Cloud** (Free Tier) or a local MQTT Broker
 * **Microsoft Azure Subscription** (Free/Student tier is sufficient)
 
